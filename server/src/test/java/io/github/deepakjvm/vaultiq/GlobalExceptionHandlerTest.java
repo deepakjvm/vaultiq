@@ -1,0 +1,37 @@
+package io.github.deepakjvm.vaultiq;
+
+import lombok.val;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
+import org.springframework.data.redis.RedisConnectionFailureException;
+import org.springframework.http.MediaType;
+
+import io.github.deepakjvm.vaultiq.service.AccountService;
+import io.github.deepakjvm.vaultiq.util.ApiMessages;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+public class GlobalExceptionHandlerTest extends BaseTest {
+
+    @MockitoSpyBean
+    private AccountService accountService;
+
+    @Test
+    void whenRedisConnectionFails_shouldReturn503() throws Exception {
+        val userDetails = createAndLoginUser();
+        val token = userDetails.get("token");
+
+        Mockito.doThrow(new RedisConnectionFailureException("Redis down"))
+               .when(accountService).isPinCreated(Mockito.anyString());
+
+        mockMvc.perform(get("/api/account/pin/check")
+                .header("Authorization", "Bearer " + token))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message")
+                .value(ApiMessages.REDIS_CONNECTION_FAILURE.getMessage()));
+    }
+}
