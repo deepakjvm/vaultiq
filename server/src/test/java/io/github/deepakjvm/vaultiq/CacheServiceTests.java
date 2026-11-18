@@ -1,7 +1,6 @@
 package io.github.deepakjvm.vaultiq;
 
 import io.github.deepakjvm.vaultiq.service.CacheService;
-import io.github.deepakjvm.vaultiq.service.CacheServiceImpl;
 import io.github.deepakjvm.vaultiq.type.CacheKeyType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +28,7 @@ class CacheServiceTests {
 
     @BeforeEach
     void setUp() {
-        cacheService = new CacheServiceImpl(redisTemplate);
+        cacheService = new CacheService(redisTemplate);
     }
 
     @Test
@@ -138,7 +137,7 @@ class CacheServiceTests {
 
         cacheService.put(CacheKeyType.IDEMPOTENCY, value, userId, endpoint, payloadHash);
 
-        verify(valueOperations).set(expectedKey, value, 86400, java.util.concurrent.TimeUnit.SECONDS);
+        verify(valueOperations).set(expectedKey, value, java.time.Duration.ofSeconds(86400));
     }
 
     @Test
@@ -153,7 +152,7 @@ class CacheServiceTests {
 
         cacheService.put(CacheKeyType.IDEMPOTENCY, value, customTtl, userId, endpoint, payloadHash);
 
-        verify(valueOperations).set(expectedKey, value, customTtl, java.util.concurrent.TimeUnit.SECONDS);
+        verify(valueOperations).set(expectedKey, value, java.time.Duration.ofSeconds(customTtl));
     }
 
     @Test

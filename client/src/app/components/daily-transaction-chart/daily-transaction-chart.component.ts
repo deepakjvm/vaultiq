@@ -4,6 +4,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import { TransactionComponent } from '../transaction/transaction.component';
 
 @Component({
+  standalone: false,
   selector: 'app-daily-transaction-chart',
   templateUrl: './daily-transaction-chart.component.html',
   styleUrls: ['./daily-transaction-chart.component.css'],

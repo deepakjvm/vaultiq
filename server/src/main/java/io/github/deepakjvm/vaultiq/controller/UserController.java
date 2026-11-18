@@ -27,9 +27,9 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-@Autowired
+    @Autowired
     private final UserService userService;
-@Autowired
+    @Autowired
     private EmailService emailService;
 
     @PostMapping("/register")

@@ -11,7 +11,7 @@ public interface JsonUtil {
 
     public static final Logger log = LoggerFactory.getLogger(JsonUtil.class);
     public static final ObjectMapper objectMapper = new ObjectMapper()
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            .setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
 
     /**
      * Convert an object to a JSON string.

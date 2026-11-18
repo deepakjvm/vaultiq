@@ -6,6 +6,7 @@ import { TransactionComponent } from '../transaction/transaction.component';
 import { EMPTY, catchError, tap } from 'rxjs';
 
 @Component({
+  standalone: false,
   selector: 'app-transaction-history',
   templateUrl: './transaction-history.component.html',
   styleUrls: ['./transaction-history.component.css'],

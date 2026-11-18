@@ -1,12 +1,60 @@
 package io.github.deepakjvm.vaultiq.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import io.github.deepakjvm.vaultiq.repository.AccountRepository;
+import org.springframework.stereotype.Service;
 
 import io.github.deepakjvm.vaultiq.dto.TransactionDTO;
+import io.github.deepakjvm.vaultiq.mapper.TransactionMapper;
+import io.github.deepakjvm.vaultiq.repository.TransactionRepository;
 
-public interface TransactionService {
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 
-	List<TransactionDTO> getAllTransactionsByAccountNumber(String accountNumber);
-	void sendBankStatementByEmail(String accountNumber);
+@Service
+@RequiredArgsConstructor
+public class TransactionService {
+
+    private final TransactionRepository transactionRepository;
+    private final TransactionMapper transactionMapper;
+    private final EmailService emailService;
+    private final AccountRepository accountRepository;
+    public List<TransactionDTO> getAllTransactionsByAccountNumber(String accountNumber) {
+        val transactions = transactionRepository
+                .findBySourceAccount_AccountNumberOrTargetAccount_AccountNumber(accountNumber, accountNumber);
+
+        val transactionDTOs = transactions.parallelStream()
+                .map(transactionMapper::toDto)
+                .sorted((t1, t2) -> t2.getTransactionDate().compareTo(t1.getTransactionDate()))
+                .collect(Collectors.toList());
+
+        return transactionDTOs;
+    }
+    public void sendBankStatementByEmail(String accountNumber) {
+        if (accountNumber == null || accountNumber.trim().isEmpty()) {
+            throw new IllegalArgumentException("Account number must not be null or empty");
+        }
+        List<TransactionDTO> transactions = getAllTransactionsByAccountNumber(accountNumber);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Bank Statement for Account: ").append(accountNumber).append("\n\n");
+
+        for(TransactionDTO txn : transactions) {
+            sb.append("Date: ").append(txn.getTransactionDate())
+                    .append(", Type: ").append(txn.getTransactionType())
+                    .append(", Amount: ").append(txn.getAmount())
+                    .append("\n");
+        }
+
+        val account = accountRepository.findByAccountNumber(accountNumber);
+        if (account == null || account.getUser() == null) {
+            // Optionally log or handle the error here
+            return;
+        }
+        String email = account.getUser().getEmail();
+        emailService.sendEmail(email, "Your Bank Statement", sb.toString());
+    }
 
 }

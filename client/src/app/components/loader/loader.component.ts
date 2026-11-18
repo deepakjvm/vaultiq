@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { LoadermodelService } from 'src/app/services/loadermodel.service';
 
 @Component({
+  standalone: false,
   selector: 'app-loader',
   templateUrl: './loader.component.html',
   styleUrls: ['./loader.component.css']

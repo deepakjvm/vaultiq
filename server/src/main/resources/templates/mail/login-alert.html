@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:replace="~{mail/layout :: emailCard(~{::#loginAlertContent})}">
+    <div id="loginAlertContent">
+        <p style="font-size: 1.2em; color: #333;">Hi, <span th:text="${name}">User</span>,</p>
+        <p style="font-size: 1em; color: #333;">A login attempt was made on your account at:</p>
+        <p style="font-size: 1em; color: #555;">Time: <strong style="color: #3f51b5;" th:text="${loginTime}">2026-11-18 10:00:00</strong></p>
+        <p style="font-size: 1em; color: #555;">Location: <strong style="color: #3f51b5;" th:text="${loginLocation}">Location</strong></p>
+        <p style="font-size: 1em; color: #333;">If this was you, no further action is required. If you suspect any unauthorized access, please change your password immediately and contact our support team.</p>
+        <p style="font-size: 1em; color: #555;">Regards,<br />The VaultIQ Team</p>
+    </div>
+</div>
+</body>
+</html>

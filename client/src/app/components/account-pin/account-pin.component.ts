@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { passwordMismatch } from 'src/app/util/formutil';
 
 @Component({
+  standalone: false,
   selector: 'app-account-pin',
   templateUrl: './account-pin.component.html',
   styleUrls: ['./account-pin.component.css'],

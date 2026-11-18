@@ -4,6 +4,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import { TransactionComponent } from '../transaction/transaction.component';
 
 @Component({
+  standalone: false,
   selector: 'app-monthly-transaction-chart',
   templateUrl: './monthly-transaction-chart.component.html',
   styleUrls: ['./monthly-transaction-chart.component.css'],

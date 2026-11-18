@@ -8,6 +8,7 @@ import { LoadermodelService } from 'src/app/services/loadermodel.service';
 import { passwordMismatch, StrongPasswordRegx } from 'src/app/util/formutil';
 
 @Component({
+  standalone: false,
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css']

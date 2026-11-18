@@ -4,7 +4,6 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
@@ -22,8 +21,7 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(new Info().title("VaultIQ Banking API")
                         .description("VaultIQ Core Banking REST API")
-                        .version("v0.0.1")
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org")))
+                        .version("v0.0.1"))
                 .externalDocs(new ExternalDocumentation()
                         .description("VaultIQ Documentation")
                         .url("https://github.com/deepakjvm/vaultiq"))

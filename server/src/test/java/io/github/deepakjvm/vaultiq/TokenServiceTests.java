@@ -102,8 +102,8 @@ public class TokenServiceTests extends BaseTest {
 
     @Test
     public void test_get_username_from_token_with_unsigned_token() {
-        val token = Jwts.builder().setSubject(getRandomAccountNumber())
-                .setIssuedAt(new Date()).compact();
+        val token = Jwts.builder().subject(getRandomAccountNumber())
+                .issuedAt(new Date()).compact();
 
         Assertions.assertThrows(InvalidTokenException.class,
                 () -> tokenService.getUsernameFromToken(token),

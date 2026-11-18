@@ -3,6 +3,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
+  standalone: false,
   selector: 'app-userprofilecard',
   templateUrl: './userprofilecard.component.html',
   styleUrls: ['./userprofilecard.component.css'],

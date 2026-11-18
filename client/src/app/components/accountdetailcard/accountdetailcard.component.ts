@@ -4,6 +4,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
+  standalone: false,
   selector: 'app-accountdetailcard',
   templateUrl: './accountdetailcard.component.html',
   styleUrls: ['./accountdetailcard.component.css'],

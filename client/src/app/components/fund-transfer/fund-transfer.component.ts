@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
+  standalone: false,
   selector: 'app-fund-transfer',
   templateUrl: './fund-transfer.component.html',
   styleUrls: ['./fund-transfer.component.css'],

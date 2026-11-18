@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
+  standalone: false,
   selector: 'app-pin-creation-model',
   templateUrl: './pin-creation-model.component.html',
   styleUrls: ['./pin-creation-model.component.css']

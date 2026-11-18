@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div style="font-family: Arial, sans-serif; padding: 20px;">
+    <h2>Bank Statement</h2>
+    <p>Dear <span th:text="${name}">User</span>,</p>
+    <p>Here is your latest bank statement:</p>
+    <pre style="background: #f4f4f4; padding: 10px; border-radius: 5px;" th:text="${statementText}">Statement content</pre>
+    <p>Regards,<br/>VaultIQ Team</p>
+</div>
+</body>
+</html>

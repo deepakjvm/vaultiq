@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import * as XLSX from 'xlsx';
 
 @Component({
+  standalone: false,
   selector: 'app-donwloadtransactions',
   templateUrl: './donwloadtransactions.component.html',
   styleUrls: ['./donwloadtransactions.component.css']

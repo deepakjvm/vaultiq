@@ -3,6 +3,7 @@ import { jwtDecode } from 'jwt-decode';
 import { environment } from 'src/environment/environment';
 
 @Component({
+  standalone: false,
   selector: 'app-transaction',
   templateUrl: './transaction.component.html',
   styleUrls: ['./transaction.component.css'],

@@ -9,8 +9,6 @@ import jakarta.mail.internet.MimeMessage;
 
 import lombok.val;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
@@ -24,10 +22,8 @@ public class GreenMailJavaMailSender extends JavaMailSenderImpl {
 
     private static final String HEADER_MESSAGE_ID = "Message-ID";
 
-    @NonNull
     private static final GreenMail greenMail;
 
-    @NonNull
     private static final Session session;
 
     static {
@@ -37,12 +33,12 @@ public class GreenMailJavaMailSender extends JavaMailSenderImpl {
     }
 
     @Override
-    public synchronized @NonNull Session getSession() {
+    public synchronized Session getSession() {
         return session;
     }
 
     @Override
-    protected void doSend(@NonNull MimeMessage[] mimeMessages, @Nullable Object[] originalMessages)
+    protected void doSend(MimeMessage[] mimeMessages, Object[] originalMessages)
             throws MailException {
 
         val failedMessages = new LinkedHashMap<Object, Exception>();

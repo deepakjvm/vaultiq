@@ -1,19 +1,83 @@
 package io.github.deepakjvm.vaultiq.service;
 
 import io.github.deepakjvm.vaultiq.type.CacheKeyType;
+import java.time.Duration;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
-public interface CacheService {
-    
-    boolean exists(CacheKeyType cacheKeyType, String... keyArguments);
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class CacheService {
 
-    Optional<String> get(CacheKeyType cacheKeyType, String... keyArguments);
+    private final RedisTemplate<String, Object> redisTemplate;
+    public boolean exists(CacheKeyType cacheKeyType, String... keyArguments) {
+        return get(cacheKeyType, keyArguments).isPresent();
+    }
+    public Optional<String> get(CacheKeyType cacheKeyType, String... keyArguments) {
+        try {
+            String key = acquireKey(cacheKeyType, keyArguments);
+            Object value = redisTemplate.opsForValue().get(key);
+            return Optional.ofNullable(value).map(Object::toString);
+        } catch (Exception e) {
+            log.error("Error retrieving value from cache: {}", e.getMessage());
+            return Optional.empty();
+        }
+    }
+    public <T> Optional<T> get(CacheKeyType cacheKeyType, Class<T> clazz, String... keyArguments) {
+        try {
+            String key = acquireKey(cacheKeyType, keyArguments);
+            Object value = redisTemplate.opsForValue().get(key);
+            if (value == null) {
+                return Optional.empty();
+            }
 
-    <T> Optional<T> get(CacheKeyType cacheKeyType, Class<T> clazz, String... keyArguments);
+            if (clazz.isInstance(value)) {
+                return Optional.of(clazz.cast(value));
+            }
 
-    void put(CacheKeyType cacheKeyType, Object value, String... keyArguments);
+            log.warn("Value type mismatch. Expected: {}, Actual: {}", clazz.getSimpleName(), value.getClass().getSimpleName());
+            return Optional.empty();
+        } catch (Exception e) {
+            log.error("Error retrieving value from cache: {}", e.getMessage());
+            return Optional.empty();
+        }
+    }
+    public void put(CacheKeyType cacheKeyType, Object value, String... keyArguments) {
+        put(cacheKeyType, value, cacheKeyType.getTtlSeconds(), keyArguments);
+    }
+    public void put(CacheKeyType cacheKeyType, Object value, long ttlSeconds, String... keyArguments) {
+        String key = acquireKey(cacheKeyType, keyArguments);
 
-    void put(CacheKeyType cacheKeyType, Object value, long ttlSeconds, String... keyArguments);
+        try {
+            redisTemplate.opsForValue().set(key, value, Duration.ofSeconds(ttlSeconds));
+            log.debug("Cache stored: key={}", key);
+        } catch (Exception e) {
+            log.error("Error storing value in cache: {}", e.getMessage());
+            throw new RuntimeException("Failed to store value in cache", e);
+        }
+    }
+    public void delete(CacheKeyType cacheKeyType, String... keyArguments) {
+        String key = acquireKey(cacheKeyType, keyArguments);
 
-    void delete(CacheKeyType cacheKeyType, String... keyArguments);
+        try {
+            redisTemplate.delete(key);
+            log.debug("Cache deleted: key={}", key);
+        } catch (Exception e) {
+            log.error("Error deleting key from cache: {}", e.getMessage());
+        }
+    }
+
+    private String acquireKey(CacheKeyType cacheKeyType, String... keyArguments) {
+        String key = cacheKeyType.generateKey();
+        if (keyArguments.length != 0) {
+            key = cacheKeyType.generateKey(keyArguments);
+        }
+
+        return key;
+    }
 }
