@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:8180/api',
-  tokenName :  "authToken",
-  origin:'http://localhost:4200' 
+  apiUrl: 'https://vaultiq-backend-a3ho.onrender.com/api',
+  tokenName: "authToken",
+  origin: 'https://vaultiq-backend-a3ho.onrender.com'
 };
