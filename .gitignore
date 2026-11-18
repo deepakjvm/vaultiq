@@ -5,6 +5,11 @@ Thumbs.db
 *.swo
 Session.vim
 
+# Environment and Secrets
+.env
+.env.*
+*.env
+
 # Logs
 *.log
 npm-debug.log*

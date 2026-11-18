@@ -45,7 +45,13 @@ application.properties
 application.yml
 application-*.properties
 application-*.yml
+!src/main/resources/application.properties
 !src/test/resources/application-test.properties
+
+# Environment and Secrets
+.env
+.env.*
+*.env
 
 # Database
 *.h2.db
