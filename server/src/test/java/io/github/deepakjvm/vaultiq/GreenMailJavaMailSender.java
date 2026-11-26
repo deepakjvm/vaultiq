@@ -44,15 +44,12 @@ public class GreenMailJavaMailSender extends JavaMailSenderImpl {
         val failedMessages = new LinkedHashMap<Object, Exception>();
 
         try (val transport = connectTransport()) {
-
             for (int i = 0; i < mimeMessages.length; i++) {
                 val mimeMessage = mimeMessages[i];
                 sendMessage(mimeMessage, originalMessages, i, failedMessages);
             }
-
         } catch (AuthenticationFailedException ex) {
             throw new MailAuthenticationException(ex);
-
         } catch (MessagingException ex) {
             handleSendException(ex, mimeMessages, originalMessages, failedMessages);
         }

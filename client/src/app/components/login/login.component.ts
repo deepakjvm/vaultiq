@@ -66,4 +66,18 @@ export class LoginComponent implements OnInit {
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
+
+  fillDemoUser(user: 'alex' | 'sarah'): void {
+    if (user === 'alex') {
+      this.loginForm.patchValue({
+        identifier: 'alex.morgan@vaultiq.demo',
+        password: 'Demo@1234',
+      });
+    } else {
+      this.loginForm.patchValue({
+        identifier: 'sarah.chen@vaultiq.demo',
+        password: 'Demo@1234',
+      });
+    }
+  }
 }

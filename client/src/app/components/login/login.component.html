@@ -1,7 +1,97 @@
-<div class="h-full flex items-center justify-center coverparentspace">
-  <div class="max-w-md w-full">
+<div class="h-full flex items-center justify-center coverparentspace py-6">
+  <div class="max-w-md w-full space-y-4">
+    <!-- Demo Credentials Card -->
     <div
-      class="border-none md:border border-gray-300 px-4 py-3 mb-8 bg-white rounded-lg shadow-none md:shadow-md"
+      class="bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200 rounded-lg p-4 shadow-sm"
+    >
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center space-x-2">
+          <span
+            class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-indigo-600 text-white"
+          >
+            Demo Accounts
+          </span>
+          <span class="text-xs text-gray-600 font-medium"
+            >Click to quick-fill credentials</span
+          >
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+        <!-- Demo User 1 -->
+        <div
+          (click)="fillDemoUser('alex')"
+          class="cursor-pointer p-2.5 bg-white rounded border border-indigo-100 hover:border-indigo-400 hover:shadow-sm transition-all duration-150 group"
+          title="Click to fill Alex Morgan's credentials"
+        >
+          <div
+            class="flex items-center justify-between font-bold text-indigo-900 mb-1"
+          >
+            <span>👤 Alex Morgan</span>
+            <span
+              class="text-[10px] text-indigo-500 font-semibold group-hover:underline"
+              >Quick Fill</span
+            >
+          </div>
+          <div class="text-gray-600 space-y-0.5">
+            <div>
+              <span class="font-medium text-gray-700">Email:</span>
+              alex.morgan&#64;vaultiq.demo
+            </div>
+            <div>
+              <span class="font-medium text-gray-700">Account:</span> 100001
+            </div>
+            <div>
+              <span class="font-medium text-gray-700">Password:</span> Demo&#64;1234
+            </div>
+            <div>
+              <span class="font-medium text-gray-700">PIN:</span>
+              <span class="font-semibold text-indigo-700">1234</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Demo User 2 -->
+        <div
+          (click)="fillDemoUser('sarah')"
+          class="cursor-pointer p-2.5 bg-white rounded border border-indigo-100 hover:border-indigo-400 hover:shadow-sm transition-all duration-150 group"
+          title="Click to fill Sarah Chen's credentials"
+        >
+          <div
+            class="flex items-center justify-between font-bold text-indigo-900 mb-1"
+          >
+            <span>👤 Sarah Chen</span>
+            <span
+              class="text-[10px] text-indigo-500 font-semibold group-hover:underline"
+              >Quick Fill</span
+            >
+          </div>
+          <div class="text-gray-600 space-y-0.5">
+            <div>
+              <span class="font-medium text-gray-700">Email:</span>
+              sarah.chen&#64;vaultiq.demo
+            </div>
+            <div>
+              <span class="font-medium text-gray-700">Account:</span> 100002
+            </div>
+            <div>
+              <span class="font-medium text-gray-700">Password:</span> Demo&#64;1234
+            </div>
+            <div>
+              <span class="font-medium text-gray-700">PIN:</span>
+              <span class="font-semibold text-indigo-700">5678</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-2 text-[11px] text-gray-500 text-center">
+        💡 Use PIN when testing transfers, deposits, or withdrawals.
+      </div>
+    </div>
+
+    <!-- Login Box -->
+    <div
+      class="border-none md:border border-gray-300 px-4 py-3 bg-white rounded-lg shadow-none md:shadow-md"
     >
       <h2 class="my-3 text-center text-3xl font-extrabold text-gray-900">
         Login
