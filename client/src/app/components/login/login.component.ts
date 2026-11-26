@@ -46,10 +46,8 @@ export class LoginComponent implements OnInit {
         next: (response: any) => {
           // Handle successful login here
           // Save the token from the response if needed
-          console.log(response);
           // this._toastService.success('Account LoggedIn');
           const token = response.token;
-          console.log(token);
           localStorage.setItem(this.authTokenName, token);
           this.loader.hide(); // Hide the loader on successful login
           this.router.navigate(['/dashboard']);

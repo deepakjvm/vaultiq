@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from 'src/environment/environment';
 
 @Injectable({
@@ -14,8 +14,16 @@ export class ApiService {
   // Account API Endpoints
 
   checkPinCreated(): Observable<any> {
-   
-    return this.http.get<any>(`${this.baseUrl}/account/pin/check`);
+    return this.http.get(`${this.baseUrl}/account/pin/check`, { responseType: 'text' }).pipe(
+      map((response: string) => {
+        try {
+          return JSON.parse(response);
+        } catch {
+          const hasPIN = response.includes('has been created') && !response.includes('not been created');
+          return { hasPIN, message: response };
+        }
+      })
+    );
   }
 
   createPin(pin: string, password: string): Observable<any> {

@@ -21,7 +21,6 @@ export class TransactionHistoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTransactionHistory();
-    console.log(this.transactionHistory);
   }
 
   loadTransactionHistory(): void {
@@ -33,7 +32,6 @@ export class TransactionHistoryComponent implements OnInit {
         tap((data) => {
           this.transactionHistory = data; // Assign the received data to the transactionHistory property
           this.filterTransactions(); // Apply initial filtering based on the current filter criteria
-          console.log(this.transactionHistory); // Now the data will be logged in the console
         }),
         catchError((error) => {
           console.error('Error fetching transaction history:', error);

@@ -47,8 +47,6 @@ export class DailyTransactionPiechartComponent implements OnInit {
   }
 
   updateChart() {
-    console.log(this.selectedDate);
-
     this.pieChartData.datasets[0].data = [];
 
     const sourceAccountNumber =

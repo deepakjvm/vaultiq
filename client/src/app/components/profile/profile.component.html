@@ -3,7 +3,7 @@
     {{ showUpdateForm ? "Edit" : "" }} User Profile
   </h1>
 
-  <div *ngIf="!showUpdateForm" class="rounded-lg bg-white md:p-6 p-2 shadow-lg">
+  <div *ngIf="!showUpdateForm && userProfile" class="rounded-lg bg-white md:p-6 p-2 shadow-lg">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <label class="text-gray-600 font-semibold">Name:</label>
@@ -17,9 +17,7 @@
 
       <div>
         <label class="text-gray-600 font-semibold">Country Code:</label>
-        <span class="text-gray-800 block">{{
-          userProfile.countryCode || "N/A"
-        }}</span>
+        <span class="text-gray-800 block">{{ userProfile.countryCode }}</span>
       </div>
 
       <div>
@@ -39,23 +37,17 @@
 
       <div>
         <label class="text-gray-600 font-semibold">Branch:</label>
-        <span class="text-gray-800 block">{{
-          userProfile.branch || "N/A"
-        }}</span>
+        <span class="text-gray-800 block">{{ userProfile.branch }}</span>
       </div>
 
       <div>
         <label class="text-gray-600 font-semibold">Account Type:</label>
-        <span class="text-gray-800 block">{{
-          userProfile.accountType || "N/A"
-        }}</span>
+        <span class="text-gray-800 block">{{ userProfile.accountType }}</span>
       </div>
 
       <div>
         <label class="text-gray-600 font-semibold">IFSC Code:</label>
-        <span class="text-gray-800 block">{{
-          userProfile.ifscCode || "N/A"
-        }}</span>
+        <span class="text-gray-800 block">{{ userProfile.ifscCode }}</span>
       </div>
     </div>
 
@@ -115,7 +107,6 @@
           >Country Code:</label
         >
         <lib-country-list
-          formControlName="countryCode"
           id="countryCode"
           [selectedCountryCode]="userProfile.countryCode"
           (onCountryChange)="onCountryChange($event)"
@@ -123,7 +114,7 @@
         >
         </lib-country-list>
         <div
-          *ngIf="f.countryCode.invalid && f.countryCodetouched"
+          *ngIf="f.countryCode.invalid && f.countryCode.touched"
           class="text-red-500 text-sm mt-1"
         >
           Please enter a valid country code.

@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://vaultiq-backend-a3ho.onrender.com/api',
+  apiUrl: 'https://vaultiq.duckdns.org/api',
   tokenName: "authToken",
-  origin: 'https://vaultiq-backend-a3ho.onrender.com'
+  origin: 'https://vaultiq.duckdns.org'
 };

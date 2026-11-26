@@ -9,6 +9,7 @@ Session.vim
 .env
 .env.*
 *.env
+.agents/
 
 # Logs
 *.log

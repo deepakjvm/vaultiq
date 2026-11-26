@@ -44,11 +44,20 @@ export class AuthInterceptor implements HttpInterceptor {
           return next.handle(authRequest).pipe(
             catchError((error: HttpErrorResponse) => {
               if (error.status === 401) {
-                // Handle 401 Unauthorized error
-                console.error('Unauthorized access. Redirecting to login page...');
-                localStorage.clear();
-                this.router.navigate(['/login']);
-                this.toastService.error('Unauthorized access. Please log in again.');
+                // Do not log out if the 401 is a form-level validation failure (e.g., incorrect old PIN or password)
+                const errorMsg = typeof error.error === 'string' ? error.error : error.error?.message;
+                const isFormBusinessError =
+                  errorMsg === 'Invalid PIN' ||
+                  errorMsg === 'Invalid password' ||
+                  errorMsg === 'PIN has not been created for this account';
+
+                if (!isFormBusinessError) {
+                  // Handle genuine session expiration / invalid JWT token
+                  console.error('Unauthorized access. Redirecting to login page...');
+                  localStorage.clear();
+                  this.router.navigate(['/login']);
+                  this.toastService.error('Unauthorized access. Please log in again.');
+                }
               }
               return throwError(error);
             })
