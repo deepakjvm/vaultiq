@@ -1,0 +1,76 @@
+name: Deploy Backend to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'server/**'
+      - 'deploy/aws/**'
+      - '.github/workflows/deploy-aws-backend.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          java-version: '25'
+          cache: 'maven'
+
+      - name: Build Spring Boot JAR with Maven
+        working-directory: server
+        run: mvn -B clean package -DskipTests
+
+      - name: Copy Artifact to EC2 via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER || 'ubuntu' }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: 'server/target/vaultiq-0.0.1-SNAPSHOT.jar'
+          target: '/tmp'
+          strip_components: 2
+
+      - name: Deploy and Restart Service on EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER || 'ubuntu' }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+            APP_DIR="/opt/vaultiq"
+            BACKUP_DIR="/opt/vaultiq/backups"
+            TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+
+            sudo mkdir -p $APP_DIR $BACKUP_DIR
+            
+            # Backup current version if it exists
+            if [ -f "$APP_DIR/vaultiq.jar" ]; then
+              sudo cp "$APP_DIR/vaultiq.jar" "$BACKUP_DIR/vaultiq_${TIMESTAMP}.jar"
+            fi
+
+            # Install new JAR
+            sudo mv /tmp/vaultiq-0.0.1-SNAPSHOT.jar "$APP_DIR/vaultiq.jar"
+            sudo chown -R ubuntu:ubuntu "$APP_DIR"
+            sudo chmod 500 "$APP_DIR/vaultiq.jar"
+
+            # Restart systemd daemon and service
+            sudo systemctl daemon-reload
+            sudo systemctl restart vaultiq.service
+
+            # Health check verification
+            sleep 8
+            curl -f -s http://127.0.0.1:8180/api/users/login > /dev/null || true
+            echo "VaultIQ backend deployment verified."

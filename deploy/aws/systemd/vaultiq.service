@@ -1,0 +1,20 @@
+[Unit]
+Description=VaultIQ Core Banking API Service
+After=syslog.target network.target
+
+[Service]
+User=ubuntu
+Group=ubuntu
+Type=simple
+EnvironmentFile=/etc/vaultiq/vaultiq.env
+WorkingDirectory=/opt/vaultiq
+ExecStart=/usr/bin/java -Xms256m -Xmx512m -XX:+UseG1GC -jar /opt/vaultiq/vaultiq.jar
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SuccessExitStatus=143
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
