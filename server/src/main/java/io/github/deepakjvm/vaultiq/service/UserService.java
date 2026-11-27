@@ -3,6 +3,7 @@ package io.github.deepakjvm.vaultiq.service;
 import java.sql.Timestamp;
 import java.util.concurrent.CompletableFuture;
 
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,6 +51,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final ValidationUtil validationUtil;
+    private final TaskExecutor taskExecutor;
     public ResponseEntity<String> registerUser(User user) {
         validationUtil.validateNewUser(user);
         encodePassword(user);
@@ -59,7 +61,7 @@ public class UserService {
     public ResponseEntity<String> login(LoginRequest loginRequest, HttpServletRequest request)
             throws InvalidTokenException {
         val user = authenticateUser(loginRequest);
-        sendLoginNotification(user, request.getRemoteAddr());
+        sendLoginNotification(user, extractClientIp(request));
         val token = generateAndSaveToken(user.getAccount().getAccountNumber());
         return ResponseEntity.ok(String.format(ApiMessages.TOKEN_ISSUED_SUCCESS.getMessage(), token));
     }
@@ -203,8 +205,20 @@ public class UserService {
                             geolocationResponse.getCity().getNames().get("en"),
                             geolocationResponse.getCountry().getNames().get("en"));
                     return sendLoginEmail(user, loginTime, loginLocation);
-                })
-                .exceptionallyComposeAsync(throwable -> sendLoginEmail(user, loginTime, "Unknown"));
+                }, taskExecutor)
+                .exceptionallyComposeAsync(throwable -> sendLoginEmail(user, loginTime, "Unknown"), taskExecutor);
+    }
+
+    private String extractClientIp(HttpServletRequest request) {
+        String clientIp = request.getHeader("X-Forwarded-For");
+        if (clientIp != null && !clientIp.isBlank()) {
+            return clientIp.split(",")[0].trim();
+        }
+        String realIp = request.getHeader("X-Real-IP");
+        if (realIp != null && !realIp.isBlank()) {
+            return realIp.trim();
+        }
+        return request.getRemoteAddr();
     }
 
     private CompletableFuture<Boolean> sendLoginEmail(User user, String loginTime, String loginLocation) {
